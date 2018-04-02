@@ -1877,6 +1877,7 @@ palm
 pan
 panel
 pant
+panzerkampfwagen
 paper
 parent
 park
