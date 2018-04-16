@@ -14,11 +14,16 @@ public class Hangman {
 	JFrame frame;
 	JPanel panel;
 	JLabel label;
-	String Display="";
+	String display="";
 	ArrayList <String> dox;
 	ArrayList <String> hangmanReadyWords;
 	String tempForFileReader= "";
 	int randomInt;
+	boolean needNewWord= true;
+	int currentWord=0;
+	String blanks="";
+	String toBeDisplayed ="";
+	
 	
 	
 public static void main(String[] args) {
@@ -29,9 +34,11 @@ public static void main(String[] args) {
 	dox= new ArrayList <String>();
 	hangmanReadyWords= new ArrayList <String>();
 	findWords();
+	randomHangmanWords();
+	displayWord();
 	panel = new JPanel();
 	frame = new JFrame();
-	label = new JLabel(Display);
+	label = new JLabel(display);
 	frame.add(panel);
 	panel.add(label);
 	frame.setSize(500, 500);
@@ -42,14 +49,13 @@ public static void main(String[] args) {
 }
 	
 	void findWords(){
-		
-		//	tempForFileReader gets its tempartary word
 			try {
 				BufferedReader br = new BufferedReader(new FileReader("src/dictionary.txt"));
 				
-				String dox = br.readLine();
-				while(dox != null){
-					dox = br.readLine();
+				tempForFileReader = br.readLine();
+				while(tempForFileReader != null){
+					dox.add(tempForFileReader);
+					tempForFileReader = br.readLine();
 				}
 				
 				br.close();
@@ -60,8 +66,6 @@ public static void main(String[] args) {
 				
 				e.printStackTrace();
 			}
-		//
-			dox.add(tempForFileReader);
 		}
 	
 	void randomHangmanWords() {
@@ -71,8 +75,33 @@ public static void main(String[] args) {
 			hangmanReadyWords.add(dox.get(randomInt));
 			
 		}
-		for (int i = 0; i < hangmanReadyWords.size(); i++) {
-			System.out.println(hangmanReadyWords.get(i));
-		}
 	}
+	
+
+		void displayWord () {
+			if(needNewWord== true) {
+				
+				for (int i = 0; i < hangmanReadyWords.get(currentWord).length(); i++) {
+					blanks += "_";
+				}
+				toBeDisplayed= toBeDisplayed +blanks;
+				updateDisplay();
+				
+				//////
+				System.out.println(hangmanReadyWords.get(currentWord));
+				
+				
+				////
+			//WHEN WORD IS FOUND TO BE CORRECT	currentWord= currentWord +1;
+				////
+				needNewWord= false;
+				
+			}
+		}
+		void updateDisplay(){
+			display="Guess a letter \n"+toBeDisplayed+" You have "+"INSERT THINGS"+" attemps left";
+		}
+	
+	
+	
 }
