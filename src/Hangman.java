@@ -1,3 +1,7 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class Hangman {
+public class Hangman implements KeyListener{
 	JFrame frame;
 	JPanel panel;
 	JLabel label;
@@ -21,8 +25,11 @@ public class Hangman {
 	int randomInt;
 	boolean needNewWord= true;
 	int currentWord=0;
+	String currentWordUp="";
 	String blanks="";
 	String toBeDisplayed ="";
+	char charTyped;
+	String temporatyToBeUpdated ="";
 	
 	
 	
@@ -35,12 +42,13 @@ public static void main(String[] args) {
 	hangmanReadyWords= new ArrayList <String>();
 	findWords();
 	randomHangmanWords();
-	displayWord();
 	panel = new JPanel();
 	frame = new JFrame();
 	label = new JLabel(display);
+	displayWord();
 	frame.add(panel);
 	panel.add(label);
+	frame.addKeyListener(this);
 	frame.setSize(500, 500);
 	frame.setLocation(700, 230);
 	frame.setVisible(true);
@@ -85,23 +93,42 @@ public static void main(String[] args) {
 					blanks += "_";
 				}
 				toBeDisplayed= toBeDisplayed +blanks;
+				currentWordUp=hangmanReadyWords.get(currentWord);
 				updateDisplay();
 				
-				//////
 				System.out.println(hangmanReadyWords.get(currentWord));
-				
-				
-				////
-			//WHEN WORD IS FOUND TO BE CORRECT	currentWord= currentWord +1;
-				////
-				needNewWord= false;
-				
+		
+				needNewWord= false;	
 			}
+			
+		}
+		void updateWord () {
+			temporatyToBeUpdated="";
+			for(int i=0;i<hangmanReadyWords.get(currentWord).length();i++) {
+				if(currentWordUp.charAt(i)==charTyped) {
+					System.out.println(charTyped);
+					temporatyToBeUpdated+=currentWordUp.charAt(i);
+				}else {
+					temporatyToBeUpdated+= blanks.charAt(i);
+			}
+				}
+			toBeDisplayed=temporatyToBeUpdated;
+			
+			updateDisplay();
 		}
 		void updateDisplay(){
 			display="Guess a letter \n"+toBeDisplayed+" You have "+"INSERT THINGS"+" attemps left";
+			label.setText(display);
+		}
+
+		
+
+		public void keyTyped(KeyEvent e) {
+			charTyped=e.getKeyChar();
+			updateWord();
+			
 		}
 	
-	
+		public void keyPressed(KeyEvent e) {}public void keyReleased(KeyEvent e) {}
 	
 }
