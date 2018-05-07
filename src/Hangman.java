@@ -28,6 +28,7 @@ public class Hangman implements KeyListener {
 	String toBeDisplayed = "";
 	char charTyped;
 	String temporatyToBeUpdated = "";
+	int lifeRemaining=9;
 
 	public static void main(String[] args) {
 		Hangman a = new Hangman();
@@ -84,16 +85,15 @@ public class Hangman implements KeyListener {
 
 	void displayWord() {
 		if (needNewWord == true) {
-
 			for (int i = 0; i < hangmanReadyWords.get(currentWord).length(); i++) {
 				blanks += "_";
 			}
 			toBeDisplayed = toBeDisplayed + blanks;
 			currentWordUp = hangmanReadyWords.get(currentWord);
 			updateDisplay();
-
+			//
 			System.out.println(hangmanReadyWords.get(currentWord));
-
+			//
 			needNewWord = false;
 		}
 
@@ -101,31 +101,54 @@ public class Hangman implements KeyListener {
 
 	void updateWord() {
 		temporatyToBeUpdated = "";
+		boolean bob =false;
+
 		for (int i = 0; i < hangmanReadyWords.get(currentWord).length(); i++) {
 			if (toBeDisplayed.charAt(i) == currentWordUp.charAt(i)) {
-
 				temporatyToBeUpdated += currentWordUp.charAt(i);
+				bob= true;
+				
 			} else if (currentWordUp.charAt(i) == charTyped) {
-
 				temporatyToBeUpdated += currentWordUp.charAt(i);
+				bob=true;
+				
 			} else {
 				temporatyToBeUpdated += blanks.charAt(i);
-			}
+			}			
+				
+		}
+		
+		if(bob==false) {
+			lives();
 		}
 		toBeDisplayed = temporatyToBeUpdated;
 
 		updateDisplay();
 		finishedWord();
 	}
+	void lives() {
+		lifeRemaining=lifeRemaining-1;
+		if(lifeRemaining==0) {
+			JOptionPane.showMessageDialog(null, "LOL, you suck at this game!!!!");
+			System.exit(0);
+		}
+		
+	}
 
 	void updateDisplay() {
-		display = "Guess a letter \n" + toBeDisplayed + " You have " + "INSERT THINGS" + " attemps left";
+		display = "Guess a letter \n" + toBeDisplayed + " You have " + lifeRemaining + " attemps left";
 		label.setText(display);
 	}
 
 	void finishedWord() {
-		if (toBeDisplayed == currentWordUp) {
+		if (toBeDisplayed.equals(currentWordUp)) {
 			JOptionPane.showMessageDialog(null, "Good Job! You got the word correct!!!");
+			needNewWord=true;
+			toBeDisplayed="";
+			currentWord=currentWord+1;
+			blanks="";
+			lifeRemaining=9;
+			displayWord();
 		}
 	}
 
@@ -135,10 +158,6 @@ public class Hangman implements KeyListener {
 
 	}
 
-	public void keyPressed(KeyEvent e) {
-	}
-
-	public void keyReleased(KeyEvent e) {
-	}
+	public void keyPressed(KeyEvent e) {}public void keyReleased(KeyEvent e) {}
 
 }
