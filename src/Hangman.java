@@ -28,7 +28,8 @@ public class Hangman implements KeyListener {
 	String toBeDisplayed = "";
 	char charTyped;
 	String temporatyToBeUpdated = "";
-	int lifeRemaining=9;
+	int lifeRemaining = 9;
+	ArrayList<Character> wrongLetters;
 
 	public static void main(String[] args) {
 		Hangman a = new Hangman();
@@ -38,6 +39,7 @@ public class Hangman implements KeyListener {
 	Hangman() {
 		dox = new ArrayList<String>();
 		hangmanReadyWords = new ArrayList<String>();
+		wrongLetters = new ArrayList<Character>();
 		findWords();
 		randomHangmanWords();
 		panel = new JPanel();
@@ -91,9 +93,11 @@ public class Hangman implements KeyListener {
 			toBeDisplayed = toBeDisplayed + blanks;
 			currentWordUp = hangmanReadyWords.get(currentWord);
 			updateDisplay();
+
 			//
 			System.out.println(hangmanReadyWords.get(currentWord));
 			//
+
 			needNewWord = false;
 		}
 
@@ -101,38 +105,48 @@ public class Hangman implements KeyListener {
 
 	void updateWord() {
 		temporatyToBeUpdated = "";
-		boolean bob =false;
+		boolean bob = false;
 
 		for (int i = 0; i < hangmanReadyWords.get(currentWord).length(); i++) {
 			if (toBeDisplayed.charAt(i) == currentWordUp.charAt(i)) {
 				temporatyToBeUpdated += currentWordUp.charAt(i);
-				bob= true;
-				
+				if (temporatyToBeUpdated.charAt(i) == charTyped) {
+					bob = true;
+				}
+
 			} else if (currentWordUp.charAt(i) == charTyped) {
 				temporatyToBeUpdated += currentWordUp.charAt(i);
-				bob=true;
-				
+				bob = true;
+
 			} else {
 				temporatyToBeUpdated += blanks.charAt(i);
-			}			
-				
+
+			}
+
 		}
-		
-		if(bob==false) {
-			lives();
+
+		if (bob == false) {
+
+			if (!wrongLetters.contains(charTyped)) {
+				lives();
+			}
+
 		}
 		toBeDisplayed = temporatyToBeUpdated;
 
 		updateDisplay();
 		finishedWord();
 	}
+
 	void lives() {
-		lifeRemaining=lifeRemaining-1;
-		if(lifeRemaining==0) {
+		lifeRemaining = lifeRemaining - 1;
+		wrongLetters.add(charTyped);
+		if (lifeRemaining == 0) {
+			updateDisplay();
 			JOptionPane.showMessageDialog(null, "LOL, you suck at this game!!!!");
 			System.exit(0);
 		}
-		
+
 	}
 
 	void updateDisplay() {
@@ -143,11 +157,14 @@ public class Hangman implements KeyListener {
 	void finishedWord() {
 		if (toBeDisplayed.equals(currentWordUp)) {
 			JOptionPane.showMessageDialog(null, "Good Job! You got the word correct!!!");
-			needNewWord=true;
-			toBeDisplayed="";
-			currentWord=currentWord+1;
-			blanks="";
-			lifeRemaining=9;
+			needNewWord = true;
+			toBeDisplayed = "";
+			currentWord = currentWord + 1;
+			blanks = "";
+			lifeRemaining = 9;
+			for (int i = 0; i < wrongLetters.size(); i++) {
+				wrongLetters.remove(i);
+			}
 			displayWord();
 		}
 	}
@@ -158,6 +175,10 @@ public class Hangman implements KeyListener {
 
 	}
 
-	public void keyPressed(KeyEvent e) {}public void keyReleased(KeyEvent e) {}
+	public void keyPressed(KeyEvent e) {
+	}
+
+	public void keyReleased(KeyEvent e) {
+	}
 
 }
