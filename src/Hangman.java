@@ -95,7 +95,7 @@ public class Hangman implements KeyListener {
 			updateDisplay();
 
 			//
-			System.out.println(hangmanReadyWords.get(currentWord));
+			// System.out.println(hangmanReadyWords.get(currentWord));
 			//
 
 			needNewWord = false;
